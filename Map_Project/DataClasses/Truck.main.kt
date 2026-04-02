@@ -3,11 +3,11 @@
 
 
 data class Truck(
-    val truckID: String?,
+    val truckLicencePlate: String?,
     val makeAndModel: String?,
     val conditionAtCheckIn: String?,
     val kilometersAtCheckIn: Int,
-    val WorkOnstatus: String?,
+    val WorkOnStatus: String?,
     val conditonAtCheckOut: String?,
     val kilometersAtCheckOut: Int,
 )
