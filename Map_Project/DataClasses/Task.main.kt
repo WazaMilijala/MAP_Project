@@ -4,7 +4,7 @@ package com.example.map_project.DataClasses;
 data class Task(
     val taskName: String,
     val taskDescription:String,
-    val taskProgress: String,
+    val isDone: Boolean = false,
     var completedBy: String?,
     var notes: String?,
     var TimeDateStarted: String?,
