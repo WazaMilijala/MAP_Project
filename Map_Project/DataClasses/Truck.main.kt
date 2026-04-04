@@ -3,13 +3,14 @@
 
 
 data class Truck(
-    val truckLicencePlate: String?,
+    val NumberPlate: String?,
     val makeAndModel: String?,
     val conditionAtCheckIn: String?,
     val kilometersAtCheckIn: Int,
     val WorkOnStatus: String?,
     val conditonAtCheckOut: String?,
     val kilometersAtCheckOut: Int,
+    val tasks: MutableList<Task> =mutableListOf()
 )
 
 
