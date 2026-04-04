@@ -4,7 +4,7 @@ package com.example.map_project.DataClasses;
 
 data class workLog (
     val workLog_ID: Int,
-    val truckID: Int,
+    val NumberPlate: Int,
     val taskId: String?,
     val mechanicName: String,
 
