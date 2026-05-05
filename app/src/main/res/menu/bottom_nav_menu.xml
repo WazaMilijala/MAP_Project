@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_checkin"
+        android:icon="@drawable/ic_checkin"
+        android:title="Check In" />
+
+    <item
+        android:id="@+id/navigation_service"
+        android:icon="@drawable/ic_service"
+        android:title="Service" />
+
+    <item
+        android:id="@+id/navigation_reports"
+        android:icon="@drawable/ic_reports"
+        android:title="Reports" />
+
+    <item
+        android:id="@+id/navigation_employees"
+        android:icon="@drawable/ic_employees"
+        android:title="Employees" />
+</menu>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_checkin">
+
+    <fragment
+        android:id="@+id/navigation_checkin"
+        android:name="com.example.valentinesgarage.presentation.fragments.CheckInFragment"
+        android:label="Check In"
+        tools:layout="@layout/fragment_check_in" />
+
+    <fragment
+        android:id="@+id/navigation_service"
+        android:name="com.example.valentinesgarage.presentation.fragments.ServiceFragment"
+        android:label="Service"
+        tools:layout="@layout/fragment_service" />
+
+    <fragment
+        android:id="@+id/navigation_reports"
+        android:name="com.example.valentinesgarage.presentation.fragments.ReportsFragment"
+        android:label="Reports"
+        tools:layout="@layout/fragment_reports" />
+
+    <fragment
+        android:id="@+id/navigation_employees"
+        android:name="com.example.valentinesgarage.presentation.fragments.EmployeesFragment"
+        android:label="Employees"
+        tools:layout="@layout/fragment_employees" />
+
+</navigation>
