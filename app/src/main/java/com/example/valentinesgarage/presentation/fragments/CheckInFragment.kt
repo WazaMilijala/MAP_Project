@@ -1,5 +1,6 @@
 package com.example.valentinesgarage.presentation.fragments
 
+import android.Manifest
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,14 +15,64 @@ import com.example.valentinesgarage.databinding.FragmentCheckInBinding
 import com.example.valentinesgarage.presentation.viewmodels.TruckCheckInViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import android.net.Uri
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.FileProvider
+import java.io.File
 
 @AndroidEntryPoint
 class CheckInFragment : Fragment() {
+
+    // Holds the URI for the current image being captured
+    private var imageUri: Uri? = null
+    // Stores all captured image URIs before truck submission
+    private val capturedPhotos = mutableListOf<String>()
 
     private var _binding: FragmentCheckInBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: TruckCheckInViewModel by viewModels()
+
+    private val cameraPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+
+        if (granted) {
+
+            imageUri = createImageFile()
+
+            cameraLauncher.launch(imageUri)
+
+        } else {
+
+            Toast.makeText(
+                context,
+                "Camera permission denied",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+    //Android camera launcher using Activity Result APIs
+    private val cameraLauncher = registerForActivityResult(
+        ActivityResultContracts.TakePicture()
+    ) { success ->
+
+        // If the photo was successfully taken
+        if (success && imageUri != null) {
+            // Save the image URI locally until the truck is submitted
+            capturedPhotos.add(imageUri.toString())
+
+
+
+
+            Toast.makeText(
+                context,
+                "Photo captured successfully",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -63,16 +114,22 @@ class CheckInFragment : Fragment() {
     }
 
     private fun setupListeners() {
+
         binding.submitButton.setOnClickListener {
             validateAndSubmit()
         }
 
+        // Launch camera when user presses capture button
         binding.capturePhotosButton.setOnClickListener {
-            Toast.makeText(context, "Photo capture feature coming soon", Toast.LENGTH_SHORT).show()
+
+            cameraPermissionLauncher.launch(
+                Manifest.permission.CAMERA
+            )
         }
     }
 
     private fun validateAndSubmit() {
+
         val licensePlate = binding.licensePlateInput.text.toString()
         val model = binding.modelInput.text.toString()
         val brand = binding.brandInput.text.toString()
@@ -84,10 +141,23 @@ class CheckInFragment : Fragment() {
         val damages = binding.damageAssessmentInput.text.toString()
         val notes = binding.notesInput.text.toString()
 
-        if (licensePlate.isEmpty() || model.isEmpty() || brand.isEmpty() ||
-            year == null || ownerName.isEmpty() || ownerPhone.isEmpty() ||
-            kilometers == null || condition.isEmpty()) {
-            Toast.makeText(context, "Please fill all required fields", Toast.LENGTH_SHORT).show()
+        if (
+            licensePlate.isEmpty() ||
+            model.isEmpty() ||
+            brand.isEmpty() ||
+            year == null ||
+            ownerName.isEmpty() ||
+            ownerPhone.isEmpty() ||
+            kilometers == null ||
+            condition.isEmpty()
+        ) {
+
+            Toast.makeText(
+                context,
+                "Please fill all required fields",
+                Toast.LENGTH_SHORT
+            ).show()
+
             return
         }
 
@@ -102,29 +172,50 @@ class CheckInFragment : Fragment() {
             condition = condition,
             damages = damages,
             notes = notes,
+
             onSuccess = { truckId ->
+
+                // Save every captured image to database
+                capturedPhotos.forEach { uri ->
+
+                    viewModel.saveTruckPhoto(
+                        truckId = truckId,
+                        imageUri = uri,
+                        photoType = "inspection"
+                    )
+                }
+
                 showSuccessDialog(truckId)
             },
+
             onError = { error ->
-                Toast.makeText(context, error, Toast.LENGTH_LONG).show()
+
+                Toast.makeText(
+                    context,
+                    error,
+                    Toast.LENGTH_LONG
+                ).show()
             }
         )
     }
 
-    private fun showSuccessDialog(truckId: Long) {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Check-in Successful")
-            .setMessage("Truck has been checked in successfully.\nTruck ID: $truckId")
-            .setPositiveButton("OK") { _, _ ->
-                findNavController().navigate(R.id.navigation_service)
-            }
-            .setNegativeButton("Check In Another") { _, _ ->
-                clearForm()
-            }
-            .show()
+    // Creates a unique image file and returns secure URI
+    private fun createImageFile(): Uri {
+
+        val imageFile = File(
+            requireContext().getExternalFilesDir("Pictures"),
+            "truck_${System.currentTimeMillis()}.jpg"
+        )
+
+        return FileProvider.getUriForFile(
+            requireContext(),
+            "${requireContext().packageName}.provider",
+            imageFile
+        )
     }
 
     private fun clearForm() {
+
         binding.licensePlateInput.text?.clear()
         binding.modelInput.text?.clear()
         binding.brandInput.text?.clear()
@@ -133,12 +224,33 @@ class CheckInFragment : Fragment() {
         binding.ownerPhoneInput.text?.clear()
         binding.kilometerInput.text?.clear()
         binding.notesInput.text?.clear()
+
         binding.conditionInput.setText("")
         binding.damageAssessmentInput.setText("")
     }
 
+    private fun showSuccessDialog(truckId: Long) {
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Check-in Successful")
+            .setMessage(
+                "Truck has been checked in successfully.\nTruck ID: $truckId"
+            )
+            .setPositiveButton("OK") { _, _ ->
+
+                findNavController().navigate(R.id.navigation_service)
+            }
+            .setNegativeButton("Check In Another") { _, _ ->
+
+                clearForm()
+            }
+            .show()
+    }
+
     override fun onDestroyView() {
+
         super.onDestroyView()
+
         _binding = null
     }
 }

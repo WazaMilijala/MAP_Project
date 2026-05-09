@@ -10,7 +10,8 @@ import javax.inject.Singleton
 class GarageRepository @Inject constructor(
     private val truckDao: TruckDao,
     private val employeeDao: EmployeeDao,
-    private val serviceTaskDao: ServiceTaskDao
+    private val serviceTaskDao: ServiceTaskDao,
+    private val truckPhotoDao: TruckPhotoDao
 ) {
     // Truck operations
     fun getAllTrucks(): Flow<List<Truck>> = truckDao.getAllTrucks()
@@ -51,6 +52,19 @@ class GarageRepository @Inject constructor(
             employeeId = employeeId,
             completedAt = System.currentTimeMillis(),
             notes = notes
+        )
+    }
+    suspend fun saveTruckPhoto(
+        truckId: Long,
+        imageUri: String,
+        photoType: String
+    ) {
+        truckPhotoDao.insertPhoto(
+            TruckPhoto(
+                truckId = truckId,
+                imageUri = imageUri,
+                photoType = photoType
+            )
         )
     }
 }

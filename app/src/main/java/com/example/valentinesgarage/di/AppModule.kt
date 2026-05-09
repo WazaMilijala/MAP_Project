@@ -35,11 +35,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideGarageRepository(
-        truckDao: TruckDao,
-        employeeDao: EmployeeDao,
-        serviceTaskDao: ServiceTaskDao
-    ): GarageRepository {
-        return GarageRepository(truckDao, employeeDao, serviceTaskDao)
+    fun provideTruckPhotoDao(database: GarageDatabase): TruckPhotoDao {
+        return database.truckPhotoDao()
     }
 }

@@ -12,9 +12,10 @@ import com.example.valentinesgarage.data.models.*
     entities = [
         Truck::class,
         Employee::class,
-        ServiceTask::class
+        ServiceTask::class,
+        TruckPhoto::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -22,6 +23,8 @@ abstract class GarageDatabase : RoomDatabase() {
     abstract fun truckDao(): TruckDao
     abstract fun employeeDao(): EmployeeDao
     abstract fun serviceTaskDao(): ServiceTaskDao
+
+    abstract fun truckPhotoDao(): TruckPhotoDao
 
     companion object {
         @Volatile
