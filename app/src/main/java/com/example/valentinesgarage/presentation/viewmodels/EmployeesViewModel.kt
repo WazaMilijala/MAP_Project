@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.valentinesgarage.data.models.Employee
+import com.example.valentinesgarage.data.models.EmployeeRole
 import com.example.valentinesgarage.data.repository.GarageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -15,11 +16,44 @@ class EmployeesViewModel @Inject constructor(
     private val repository: GarageRepository
 ) : ViewModel() {
 
-    val employees: LiveData<List<Employee>> = repository.getAllEmployees().asLiveData()
+    // Live employee list from Room
+    val employees: LiveData<List<Employee>> =
+        repository.getAllEmployees().asLiveData()
 
-    fun addEmployee(employee: Employee) {
+    /**
+     * Add a new employee
+     */
+    fun addEmployee(
+        name: String,
+        role: EmployeeRole,
+        email: String,
+        phone: String,
+        employeeId: String
+    ) {
+
         viewModelScope.launch {
+
+            val employee = Employee(
+                name = name,
+                role = role,
+                email = email,
+                phone = phone,
+                employeeId = employeeId,
+                isActive = true
+            )
+
             repository.insertEmployee(employee)
+        }
+    }
+
+    /**
+     * Delete employee
+     */
+    fun deleteEmployee(employee: Employee) {
+
+        viewModelScope.launch {
+
+            repository.deleteEmployee(employee)
         }
     }
 }

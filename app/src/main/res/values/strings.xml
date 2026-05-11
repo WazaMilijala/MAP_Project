@@ -20,4 +20,16 @@
     <string name="condition">Condition</string>
     <string name="damages">Damages</string>
     <string name="notes">Notes</string>
+
+
+    <string name="add_service_task">Add Service Task</string>
+    <string name="task_title">Task Title</string>
+    <string name="task_description">Task Description</string>
+    <string name="assign_to">Assign To</string>
+    <string name="priority">Priority</string>
+
+    <string name="truck_photos">Truck Photos</string>
+
+    <string name="assigned_to">Assigned to: %1$s</string>
+
 </resources>

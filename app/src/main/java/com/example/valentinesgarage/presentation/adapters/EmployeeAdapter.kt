@@ -1,7 +1,5 @@
 package com.example.valentinesgarage.presentation.adapters
 
-
-
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -11,46 +9,88 @@ import com.example.valentinesgarage.data.models.Employee
 import com.example.valentinesgarage.databinding.ItemEmployeeBinding
 
 class EmployeeAdapter(
-    private val onEmployeeClick: (Employee) -> Unit
-) : ListAdapter<Employee, EmployeeAdapter.EmployeeViewHolder>(EmployeeDiffCallback()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EmployeeViewHolder {
+    // Normal click
+    private val onEmployeeClick: (Employee) -> Unit,
+
+    // Long press
+    private val onEmployeeLongClick: (Employee) -> Unit
+
+) : ListAdapter<Employee, EmployeeAdapter.EmployeeViewHolder>(
+    EmployeeDiffCallback()
+) {
+
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): EmployeeViewHolder {
+
         val binding = ItemEmployeeBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
         )
-        return EmployeeViewHolder(binding, onEmployeeClick)
+
+        return EmployeeViewHolder(
+            binding,
+            onEmployeeClick,
+            onEmployeeLongClick
+        )
     }
 
-    override fun onBindViewHolder(holder: EmployeeViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: EmployeeViewHolder,
+        position: Int
+    ) {
+
         holder.bind(getItem(position))
     }
 
     class EmployeeViewHolder(
         private val binding: ItemEmployeeBinding,
-        private val onEmployeeClick: (Employee) -> Unit
+        private val onEmployeeClick: (Employee) -> Unit,
+        private val onEmployeeLongClick: (Employee) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(employee: Employee) {
+
             binding.apply {
+
+                // Employee info
                 employeeNameText.text = employee.name
                 employeeRoleText.text = employee.role.name
                 employeeIdText.text = employee.employeeId
 
+                // Normal tap
                 root.setOnClickListener {
+
                     onEmployeeClick(employee)
+                }
+
+                // Long press
+                root.setOnLongClickListener {
+
+                    onEmployeeLongClick(employee)
+
+                    true
                 }
             }
         }
     }
 
     class EmployeeDiffCallback : DiffUtil.ItemCallback<Employee>() {
-        override fun areItemsTheSame(oldItem: Employee, newItem: Employee): Boolean {
+
+        override fun areItemsTheSame(
+            oldItem: Employee,
+            newItem: Employee
+        ): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: Employee, newItem: Employee): Boolean {
+        override fun areContentsTheSame(
+            oldItem: Employee,
+            newItem: Employee
+        ): Boolean {
             return oldItem == newItem
         }
     }

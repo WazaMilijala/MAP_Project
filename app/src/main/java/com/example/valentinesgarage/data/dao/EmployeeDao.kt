@@ -27,4 +27,5 @@ interface EmployeeDao {
 
     @Query("SELECT * FROM employees WHERE isActive = 1")
     fun getActiveEmployees(): Flow<List<Employee>>
+
 }

@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/gray_light">
 
+
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchView"
         android:layout_width="0dp"

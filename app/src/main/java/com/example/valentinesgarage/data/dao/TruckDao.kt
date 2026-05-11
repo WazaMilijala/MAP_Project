@@ -27,4 +27,7 @@ interface TruckDao {
 
     @Query("SELECT * FROM trucks WHERE checkInDate BETWEEN :startDate AND :endDate")
     suspend fun getTrucksBetweenDates(startDate: Long, endDate: Long): List<Truck>
+
+
+
 }

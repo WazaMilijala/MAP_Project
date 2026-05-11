@@ -29,4 +29,11 @@
         android:label="Employees"
         tools:layout="@layout/fragment_employees" />
 
+
+
+
+    <fragment
+        android:id="@+id/fullscreenPhotoFragment"
+        android:name="com.example.valentinesgarage.presentation.fragments.FullscreenPhotoFragment"
+        android:label="Fullscreen Photo" />
 </navigation>

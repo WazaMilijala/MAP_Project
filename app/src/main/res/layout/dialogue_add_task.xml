@@ -1,101 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="20dp">
 
+    <!-- Dialog title -->
     <TextView
+        android:id="@+id/dialogTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Service Task"
-        android:textSize="20sp"
-        android:textStyle="bold"
         android:layout_marginBottom="16dp"
-        android:textColor="@color/primary_red" />
+        android:text="@string/add_service_task"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
+    <!-- Task title input -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/taskTitleLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
-        android:hint="Task Title"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        android:hint="@string/task_title">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/taskTitleInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="@string/task_title"
             android:inputType="text" />
+
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- Task description input -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/taskDescriptionLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
-        android:hint="Description"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        android:hint="@string/task_description">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/taskDescriptionInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="@string/task_description"
             android:inputType="textMultiLine"
-            android:minLines="3"
-            android:maxLines="5" />
+            android:maxLines="5"
+            android:minLines="3" />
+
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- Employee assignment dropdown -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/assignToLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
-        android:hint="Assign To"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        android:hint="@string/assign_to">
 
         <AutoCompleteTextView
             android:id="@+id/assignToInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="@string/assign_to"
             android:inputType="none" />
+
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- Priority dropdown -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/priorityLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
-        android:hint="Priority"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        android:hint="@string/priority">
 
         <AutoCompleteTextView
             android:id="@+id/priorityInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="@string/priority"
             android:inputType="none" />
-    </com.google.android.material.textfield.TextInputLayout>
 
+      </com.google.android.material.textfield.TextInputLayout>
+    <!-- Action buttons -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="end">
+        android:gravity="end"
+        android:orientation="horizontal">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/cancelButton"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancel"
-            style="@style/Widget.MaterialComponents.Button.TextButton" />
+            android:text="@string/cancel" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/addButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="Add Task" />
+            android:text="@string/add_task" />
 
     </LinearLayout>
 

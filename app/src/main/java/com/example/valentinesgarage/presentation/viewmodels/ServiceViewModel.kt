@@ -7,12 +7,14 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.example.valentinesgarage.data.models.ServiceTask
+import com.example.valentinesgarage.data.models.TaskPriority
 import com.example.valentinesgarage.data.models.Truck
 import com.example.valentinesgarage.data.models.TruckStatus
 import com.example.valentinesgarage.data.repository.GarageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.collections.mutableListOf
 
 @HiltViewModel
 class ServiceViewModel @Inject constructor(
@@ -26,6 +28,10 @@ class ServiceViewModel @Inject constructor(
     // All trucks as LiveData
     val trucks: LiveData<List<Truck>> = repository.getAllTrucks().asLiveData()
 
+    // All employees from database
+    val employees = repository.getAllEmployees().asLiveData()
+
+
     // Tasks for selected truck as LiveData
     val tasks: LiveData<List<ServiceTask>> = _selectedTruckId.switchMap { truckId ->
         if (truckId != null) {
@@ -35,18 +41,31 @@ class ServiceViewModel @Inject constructor(
         }
     }
 
+    val photos = _selectedTruckId.switchMap { truckId ->
+
+        if (truckId != null) {
+            repository.getPhotosForTruck(truckId).asLiveData()
+        } else {
+            MutableLiveData(emptyList())
+        }
+    }
+
+
+
     fun selectTruck(truckId: Long) {
         _selectedTruckId.value = truckId
     }
 
-    fun addTask(title: String, description: String, assignedToId: Long?) {
+    fun addTask(title: String, description: String, assignedToId: Long?, priority: TaskPriority) {
         viewModelScope.launch {
             _selectedTruckId.value?.let { truckId ->
                 val task = ServiceTask(
                     truckId = truckId,
                     title = title,
                     description = description,
-                    assignedToEmployeeId = assignedToId
+                    assignedToEmployeeId = assignedToId,
+                    priority = priority
+
                 )
                 repository.insertTask(task)
             }
@@ -66,4 +85,27 @@ class ServiceViewModel @Inject constructor(
             }
         }
     }
+
+
+
+
+
+
+    fun deleteTruck(truck: Truck) {
+
+        viewModelScope.launch {
+
+            // Delete all related service tasks
+            repository.deleteTasksForTruck(truck.id)
+
+            // Delete all related truck photos
+            repository.deletePhotosForTruck(truck.id)
+
+            // Finally delete truck
+            repository.deleteTruck(truck)
+        }
+    }
+
+
+
 }

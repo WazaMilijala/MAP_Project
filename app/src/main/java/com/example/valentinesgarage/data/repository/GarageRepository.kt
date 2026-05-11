@@ -67,4 +67,25 @@ class GarageRepository @Inject constructor(
             )
         )
     }
+
+    fun getPhotosForTruck(truckId: Long) =
+        truckPhotoDao.getPhotoPathsForTruck(truckId)
+
+
+    suspend fun deleteTruck(truck: Truck) {
+        truckDao.deleteTruck(truck)
+    }
+
+
+    suspend fun deleteTasksForTruck(truckId: Long) {
+        serviceTaskDao.deleteTasksForTruck(truckId)
+    }
+
+    suspend fun deletePhotosForTruck(truckId: Long) {
+        truckPhotoDao.deletePhotosForTruck(truckId)
+    }
+
+    suspend fun deleteEmployee(employee: Employee) {
+        employeeDao.deleteEmployee(employee)
+    }
 }

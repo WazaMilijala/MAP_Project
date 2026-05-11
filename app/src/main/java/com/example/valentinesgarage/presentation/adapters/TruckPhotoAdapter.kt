@@ -8,7 +8,8 @@ import com.bumptech.glide.Glide
 import com.example.valentinesgarage.databinding.ItemTruckPhotoBinding
 
 class TruckPhotoAdapter(
-    private val photos: List<String>
+    private val photos: List<String>,
+    private val onPhotoClick: (String) -> Unit
 ) : RecyclerView.Adapter<TruckPhotoAdapter.PhotoViewHolder>() {
 
     inner class PhotoViewHolder(
@@ -16,6 +17,9 @@ class TruckPhotoAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(photoUri: String) {
+            binding.root.setOnClickListener {
+                onPhotoClick(photoUri)
+            }
 
             Glide.with(binding.root.context)
                 .load(Uri.parse(photoUri))
