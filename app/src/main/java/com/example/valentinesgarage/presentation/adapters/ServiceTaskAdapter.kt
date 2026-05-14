@@ -13,7 +13,7 @@ import com.example.valentinesgarage.databinding.ItemServiceTaskBinding
 class ServiceTaskAdapter(
 
     // List of employees used to match IDs to names
-    private val employees: List<Employee>,
+    private var employees: List<Employee>,
 
     // Callback when checkbox is checked/unchecked
     private val onTaskChecked: (ServiceTask, Boolean) -> Unit,
@@ -136,5 +136,9 @@ class ServiceTaskAdapter(
 
             return oldItem == newItem
         }
+    }
+
+    fun updateEmployees(employees: List<Employee>) {
+        this.employees = employees
     }
 }

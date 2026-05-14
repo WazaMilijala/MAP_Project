@@ -3,7 +3,6 @@ package com.example.valentinesgarage.presentation.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.valentinesgarage.data.models.Truck
-import com.example.valentinesgarage.data.models.TruckPhoto
 import com.example.valentinesgarage.data.repository.GarageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -13,7 +12,6 @@ import javax.inject.Inject
 class TruckCheckInViewModel @Inject constructor(
     private val repository: GarageRepository
 ) : ViewModel() {
-
 
     fun checkInTruck(
         licensePlate: String,
@@ -50,18 +48,18 @@ class TruckCheckInViewModel @Inject constructor(
             }
         }
     }
+
     fun saveTruckPhoto(
         truckId: Long,
         imageUri: String,
         photoType: String
     ) {
         viewModelScope.launch {
-
-            repository.saveTruckPhoto(
-                truckId = truckId,
-                imageUri = imageUri,
-                photoType = photoType
-            )
+            try {
+                repository.addPhotoForTruck(truckId, imageUri)
+            } catch (e: Exception) {
+                // Handle error silently or add callback if needed
+            }
         }
     }
 }

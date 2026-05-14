@@ -21,6 +21,9 @@ interface ServiceTaskDao {
     @Update
     suspend fun updateTask(task: ServiceTask)
 
+    @Delete
+    suspend fun deleteTask(task: ServiceTask)
+
     @Query("UPDATE service_tasks SET isCompleted = 1, completedAt = :completedAt, completedByEmployeeId = :employeeId, mechanicNotes = :notes WHERE id = :taskId")
     suspend fun completeTask(taskId: Long, employeeId: Long, completedAt: Long, notes: String)
 

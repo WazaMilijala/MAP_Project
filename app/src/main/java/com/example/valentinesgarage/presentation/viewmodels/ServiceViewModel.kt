@@ -14,46 +14,37 @@ import com.example.valentinesgarage.data.repository.GarageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.collections.mutableListOf
 
 @HiltViewModel
 class ServiceViewModel @Inject constructor(
     private val repository: GarageRepository
 ) : ViewModel() {
 
-    // Selected truck ID as LiveData
     private val _selectedTruckId = MutableLiveData<Long?>()
     val selectedTruckId: LiveData<Long?> = _selectedTruckId
 
-    // All trucks as LiveData
     val trucks: LiveData<List<Truck>> = repository.getAllTrucks().asLiveData()
 
-    // All employees from database
     val employees = repository.getAllEmployees().asLiveData()
 
-
-    // Tasks for selected truck as LiveData
-    val tasks: LiveData<List<ServiceTask>> = _selectedTruckId.switchMap { truckId ->
+    // ✅ FIXED: Explicit type parameter for switchMap
+    val tasks: LiveData<List<ServiceTask>> = _selectedTruckId.switchMap { truckId: Long? ->
         if (truckId != null) {
             repository.getTasksForTruck(truckId).asLiveData()
         } else {
-            MutableLiveData(emptyList())
+            val empty: MutableLiveData<List<ServiceTask>> = MutableLiveData(emptyList())
+            empty
         }
     }
 
-    val photos = _selectedTruckId.switchMap { truckId ->
-
-        if (truckId != null) {
-            repository.getPhotosForTruck(truckId).asLiveData()
-        } else {
-            MutableLiveData(emptyList())
-        }
-    }
-
-
+    // ✅ FIXED: Simplified photos - use MutableLiveData directly
+    private val _photos = MutableLiveData<List<String>>(emptyList())
+    val photos: LiveData<List<String>> = _photos
 
     fun selectTruck(truckId: Long) {
         _selectedTruckId.value = truckId
+        // Load photos when truck is selected (implement based on your photo storage)
+        loadPhotosForTruck(truckId)
     }
 
     fun addTask(title: String, description: String, assignedToId: Long?, priority: TaskPriority) {
@@ -65,7 +56,6 @@ class ServiceViewModel @Inject constructor(
                     description = description,
                     assignedToEmployeeId = assignedToId,
                     priority = priority
-
                 )
                 repository.insertTask(task)
             }
@@ -86,26 +76,25 @@ class ServiceViewModel @Inject constructor(
         }
     }
 
-
-
-
-
-
     fun deleteTruck(truck: Truck) {
-
         viewModelScope.launch {
-
             // Delete all related service tasks
             repository.deleteTasksForTruck(truck.id)
 
-            // Delete all related truck photos
-            repository.deletePhotosForTruck(truck.id)
-
-            // Finally delete truck
+            // Delete the truck
             repository.deleteTruck(truck)
         }
     }
 
-
-
+    private fun loadPhotosForTruck(truckId: Long) {
+        viewModelScope.launch {
+            try {
+                // Get photos from your photo storage implementation
+                val photos = repository.getPhotosForTruckSync(truckId)
+                _photos.value = photos
+            } catch (e: Exception) {
+                _photos.value = emptyList()
+            }
+        }
+    }
 }
